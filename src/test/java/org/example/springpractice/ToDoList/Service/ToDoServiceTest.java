@@ -1,0 +1,49 @@
+package org.example.springpractice.ToDoList.Service;
+
+import org.example.springpractice.ToDoList.Repository.ToDoRepository;
+import org.example.springpractice.ToDoList.model.Status;
+import org.example.springpractice.ToDoList.model.ToDo;
+import org.example.springpractice.ToDoList.utils.IdService;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+class ToDoServiceTest {
+
+    ToDoRepository mocktoDoRepository = mock(ToDoRepository.class);
+    IdService mockIdService = mock(IdService.class);
+    ToDoService toDoService = new ToDoService(mocktoDoRepository, mockIdService);
+
+    @Test
+    void getAllToDos() {
+        //GIVEN
+        ToDo t1 = new ToDo( "1","Test", "OPEN");
+        when(mocktoDoRepository.findAll()).thenReturn(List.of(t1));
+        //WHEN
+        List<ToDo> actual = toDoService.getAllToDos();
+        //THEN
+        verify(mocktoDoRepository).findAll();
+        assertEquals(List.of(t1),actual);
+    }
+
+    @Test
+    void addToDo() {
+        //GIVEN
+        ToDo noId = ToDo.builder()
+                .description("test")
+                .status("DONE")
+                .build();
+        ToDo withId = noId.withId("42");
+        when(mockIdService.generateId()).thenReturn("42");
+        when(mocktoDoRepository.save(withId)).thenReturn(withId);
+        //WHEN
+        ToDo actual = toDoService.addToDo(noId);
+        //THEN
+        verify(mockIdService).generateId();
+        verify(mocktoDoRepository).save(withId);
+        assertEquals(withId,actual);
+    }
+}
