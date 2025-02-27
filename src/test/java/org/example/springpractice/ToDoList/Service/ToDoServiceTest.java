@@ -20,7 +20,7 @@ class ToDoServiceTest {
     @Test
     void getAllToDos() {
         //GIVEN
-        ToDo t1 = new ToDo( "1","Test", "OPEN");
+        ToDo t1 = new ToDo( "1","Test", Status.OPEN);
         when(mocktoDoRepository.findAll()).thenReturn(List.of(t1));
         //WHEN
         List<ToDo> actual = toDoService.getAllToDos();
@@ -34,7 +34,7 @@ class ToDoServiceTest {
         //GIVEN
         ToDo noId = ToDo.builder()
                 .description("test")
-                .status("DONE")
+                .status(Status.OPEN)
                 .build();
         ToDo withId = noId.withId("42");
         when(mockIdService.generateId()).thenReturn("42");
@@ -45,5 +45,28 @@ class ToDoServiceTest {
         verify(mockIdService).generateId();
         verify(mocktoDoRepository).save(withId);
         assertEquals(withId,actual);
+    }
+
+    @Test
+    void updateToDo() {
+        //GIVEN
+        String id = "1234";
+        ToDo oldTodo = ToDo.builder()
+                .description("test")
+                .status(Status.OPEN)
+                .build();
+        ToDo updatedTodo = ToDo.builder()
+                .id("1234")
+                .description("test")
+                .status(Status.OPEN)
+                .build();
+        when(mocktoDoRepository.save(updatedTodo)).thenReturn(updatedTodo);
+        //WHEN
+        ToDo actual = toDoService.updateToDo(id, oldTodo);
+
+        //THEN
+        verify(mocktoDoRepository).save(updatedTodo);
+        assertEquals(updatedTodo, actual);
+
     }
 }

@@ -6,6 +6,6 @@ import lombok.Builder;
 public record ToDoResponseDto(
         String id,
         String description,
-        String status
+        Status status
 ) {
 }

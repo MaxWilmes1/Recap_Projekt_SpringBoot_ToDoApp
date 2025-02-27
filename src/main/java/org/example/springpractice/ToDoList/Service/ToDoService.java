@@ -2,6 +2,7 @@ package org.example.springpractice.ToDoList.Service;
 
 import lombok.AllArgsConstructor;
 import org.example.springpractice.ToDoList.Repository.ToDoRepository;
+import org.example.springpractice.ToDoList.model.Status;
 import org.example.springpractice.ToDoList.model.ToDo;
 import org.example.springpractice.ToDoList.utils.IdService;
 import org.springframework.stereotype.Service;
@@ -29,17 +30,10 @@ public class ToDoService {
 //        return toDoRepository.findById(id).get();
 //    }
 //
-//    public ToDo updateById(String id, ToDo updatedToDo) {
-//        return toDoRepository.findById(id)
-//                .map(existingToDo -> {
-//                    ToDo updated = new ToDo(
-//                            updatedToDo.description(),
-//                            updatedToDo.status()
-//                    );
-//                    return toDoRepository.save(updated);
-//                }).orElseGet(null);
-//
-//    }
+    public ToDo updateToDo(String id, ToDo updatedToDo) {
+        ToDo update = new ToDo(id, updatedToDo.description(), updatedToDo.status());
+        return toDoRepository.save(update);
+    }
 //
 //    public void deleteById(String id) {
 //        toDoRepository.deleteById(id);

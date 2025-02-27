@@ -40,10 +40,14 @@ public class ToDoController {
 //        return toDoService.findById(id);
 //    }
 //
-//    @PutMapping("/{id}")
-//    public ToDo updateById(@PathVariable String id, @RequestBody ToDo updatedToDo){
-//        return toDoService.updateById(id, updatedToDo);
-//    }
+    @PutMapping("/{id}")
+    public ToDo updateToDo(@PathVariable String id, @RequestBody ToDoRequestDto newToDoRequestDto){
+        ToDo updatedToDo = ToDo.builder()
+                .description(newToDoRequestDto.description())
+                .status(newToDoRequestDto.status())
+                .build();
+        return toDoService.updateToDo(id, updatedToDo);
+    }
 //
 //    @DeleteMapping("/{id}")
 //    public void deleteById(@PathVariable String id){
