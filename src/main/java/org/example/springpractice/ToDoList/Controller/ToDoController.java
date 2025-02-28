@@ -34,12 +34,6 @@ public class ToDoController {
                 savedToDo.status()
         );
     }
-//
-//    @GetMapping("/{id}")
-//    public ToDo findById(@PathVariable String id){
-//        return toDoService.findById(id);
-//    }
-//
     @PutMapping("/{id}")
     public ToDo updateToDo(@PathVariable String id, @RequestBody ToDoRequestDto newToDoRequestDto){
         ToDo updatedToDo = ToDo.builder()
@@ -48,10 +42,15 @@ public class ToDoController {
                 .build();
         return toDoService.updateToDo(id, updatedToDo);
     }
-//
-//    @DeleteMapping("/{id}")
-//    public void deleteById(@PathVariable String id){
-//        toDoService.deleteById(id);
-//    }
+
+    @GetMapping("/{id}")
+    public ToDo findById(@PathVariable String id){
+        return toDoService.findById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable String id){
+        toDoService.deleteById(id);
+    }
 
 }

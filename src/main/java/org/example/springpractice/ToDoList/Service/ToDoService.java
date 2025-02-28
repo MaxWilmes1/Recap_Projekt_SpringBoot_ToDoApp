@@ -8,6 +8,7 @@ import org.example.springpractice.ToDoList.utils.IdService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
@@ -17,7 +18,7 @@ public class ToDoService {
     private final IdService idService;
 
     public List<ToDo> getAllToDos() {
-       return toDoRepository.findAll();
+        return toDoRepository.findAll();
     }
 
     public ToDo addToDo(ToDo newtoDo) {
@@ -25,17 +26,18 @@ public class ToDoService {
         ToDo newToDoWithUUID = newtoDo.withId(id);
         return toDoRepository.save(newToDoWithUUID);
     }
-//
-//    public ToDo findById(String id) {
-//        return toDoRepository.findById(id).get();
-//    }
-//
+
     public ToDo updateToDo(String id, ToDo updatedToDo) {
         ToDo update = new ToDo(id, updatedToDo.description(), updatedToDo.status());
         return toDoRepository.save(update);
     }
-//
-//    public void deleteById(String id) {
-//        toDoRepository.deleteById(id);
-//    }
+
+    public ToDo findById(String id) {
+        return toDoRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Todo with id: " + id + " not found!"));
+    }
+
+    public void deleteById(String id) {
+        toDoRepository.deleteById(id);
+    }
 }

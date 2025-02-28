@@ -7,6 +7,8 @@ import org.example.springpractice.ToDoList.utils.IdService;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -68,5 +70,39 @@ class ToDoServiceTest {
         verify(mocktoDoRepository).save(updatedTodo);
         assertEquals(updatedTodo, actual);
 
+    }
+
+    @Test
+    void findByIdTest_WhenValidId_ThenReturnToDo() {
+        //GIVEN
+        ToDo t1 = new ToDo("1", "test", Status.OPEN);
+        when(mocktoDoRepository.findById("1")).thenReturn(Optional.of(t1));
+        //WHEN
+        ToDo actual = toDoService.findById("1");
+        //THEN
+        verify(mocktoDoRepository).findById("1");
+        assertEquals(t1,actual);
+    }
+
+    @Test
+    void findByIdTest_WhenIdInvalid_ThenNoSuchElementException() {
+        //GIVEN
+        when(mocktoDoRepository.findById("1")).thenReturn(Optional.empty());
+        //WHEN
+        assertThrows(NoSuchElementException.class, ()-> toDoService.findById("1"));
+        //THEN
+        verify(mocktoDoRepository).findById("1");
+
+    }
+
+    @Test
+    void deleteByIdTest() {
+        //GIVEN
+        String id = "1";
+        doNothing().when(mocktoDoRepository).deleteById(id);
+        //WHEN
+        toDoService.deleteById(id);
+        //THEN
+        verify(mocktoDoRepository).deleteById(id);
     }
 }

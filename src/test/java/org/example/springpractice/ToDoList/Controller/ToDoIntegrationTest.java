@@ -65,6 +65,7 @@ class ToDoIntegrationTest {
     }
 
     @Test
+    @DirtiesContext
     void updateToDo() throws Exception {
         //GIVEN
         ToDo todo = new ToDo("123", "test", Status.IN_PROGRESS);
@@ -89,4 +90,44 @@ class ToDoIntegrationTest {
 
     }
 
+    @Test
+    @DirtiesContext
+    void findByIdTest_WhenValidId_ThenReturnTodo() throws Exception {
+        //GIVEN
+        ToDo todo = new ToDo("123", "test", Status.IN_PROGRESS);
+        toDoRepository.save(todo);
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/todo/123"))
+                //THEN
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {
+                          "id": "123",
+                          "description": "test",
+                          "status": "IN_PROGRESS"
+                        }
+                        """));
+    }
+
+    @Test
+    @DirtiesContext
+    void findByIdTest_WhenInvalidId_ThenStatuscode404() throws Exception {
+        //GIVEN
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/todo/123"))
+                //THEN
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DirtiesContext
+    void deleteByIdTest() throws Exception {
+        //GIVEN
+        ToDo todo = new ToDo("123", "test", Status.OPEN);
+        toDoRepository.save(todo);
+        //WHEN
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/todo/123"))
+                //THEN
+                .andExpect(status().isOk());
+    }
 }
